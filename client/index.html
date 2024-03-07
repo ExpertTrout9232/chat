@@ -24,6 +24,10 @@
 
     const chat_message = () => {
         console.log('chat_message: ', input.value);
+        const item = document.createElement('li');
+        item.textContent = input.value;
+        color_text(item, "#ff9cb4");
+        messages.appendChild(item);
         if (input.value) {
             socket.emit('chat_message', input.value);
             input.value = '';
@@ -33,8 +37,13 @@
     socket.on('chat_message', (msg) => {
         const item = document.createElement('li');
         item.textContent = msg;
+        color_text(item, "#8fffee");
         messages.appendChild(item);
     });
+
+    const color_text = (item, color) => {
+        item.style.backgroundColor = color;
+    }
 </script>
 </body>
 </html>
