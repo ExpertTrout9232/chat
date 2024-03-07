@@ -22,21 +22,25 @@
     const input = document.getElementById('input');
     const messages = document.getElementById('messages');
 
+    let message_count = 0;
+
     const chat_message = () => {
         console.log('chat_message: ', input.value);
         const item = document.createElement('li');
         item.textContent = input.value;
         color_text(item, "#ff9cb4");
-        messages.appendChild(item);
+        messages.appendChild(toString(message_count) + "          " + input.value);
         if (input.value) {
-            socket.emit('chat_message', input.value);
+            socket.emit('chat_message', JSON.stringify({"message":input.value,"message_index":message_count}));
             input.value = '';
+            message_count++;
         }
     };
 
     socket.on('chat_message', (msg) => {
+        let parsed_msg = JSON.parse(msg)
         const item = document.createElement('li');
-        item.textContent = msg;
+        item.textContent = parsed_msg.message_index + "          " + parsed_msg.message;
         color_text(item, "#8fffee");
         messages.appendChild(item);
     });
