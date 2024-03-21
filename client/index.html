@@ -26,28 +26,24 @@
 
     const chat_message = () => {
         console.log('chat_message: ', input.value);
-        const item = document.createElement('li');
-        item.textContent = input.value;
-        color_text(item, "#ff9cb4");
-        messages.appendChild(toString(message_count) + "          " + input.value);
         if (input.value) {
             socket.emit('chat_message', JSON.stringify({"message":input.value,"message_index":message_count}));
+            append_message(JSON.stringify({"message":input.value,"message_index":message_count}), "#ff9cb4")
             input.value = '';
-            message_count++;
         }
     };
 
-    socket.on('chat_message', (msg) => {
+    const append_message = (msg, color) => {
         let parsed_msg = JSON.parse(msg)
-        const item = document.createElement('li');
-        item.textContent = parsed_msg.message_index + "          " + parsed_msg.message;
-        color_text(item, "#8fffee");
+        const item = document.createElement('div');
+        item.innerHTML = `<div class="w-full flex flex-row gap-5"><span>${parsed_msg.message_index}</span><p class="text-wrap" style="background:${color}; min-width:100% max-width:100%">${parsed_msg.message}</p></div>`
         messages.appendChild(item);
-    });
-
-    const color_text = (item, color) => {
-        item.style.backgroundColor = color;
+        message_count++;
     }
+
+    socket.on('chat_message', (msg) => {
+        append_message(msg, "#8fffee")
+    });
 </script>
 </body>
 </html>
