@@ -7,10 +7,13 @@
   <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-200">
-    <div class="container mx-auto my-8">
-        <input id="input" autocomplete="off" class="rounded-l-lg p-4 border-t mr-0 border-b border-l text-gray-800 border-gray-200 bg-white" />
-        <button onclick="chat_message()"
-            class="px-8 rounded-r-lg bg-gray-700  text-gray-200 font-bold p-4 uppercase border-gray-700 border-t border-b border-r">Send</button>
+    <div class="my-8 w-screen flex justify-center">
+        <div class="w-3/4 flex">
+            <input id="name" autocomplete="off" class="w-1/4 rounded-l-lg rounded-r-lg placeholder-gray-500 p-4 border-t mr-2 border-b border-l text-gray-800 border-gray-200 bg-white" placeholder="Name"/>
+            <input id="input" autocomplete="off" class="grow w-full rounded-l-lg rounded-r-lg p-4 border-t mr-2 border-b border-l text-gray-800 border-gray-200 bg-white" />
+            <button onclick="chat_message()"
+                class="px-8 rounded-r-lg rounded-l-lg bg-gray-700  text-gray-200 font-bold p-4 uppercase border-gray-700 border-t border-b border-r">Send</button>
+        </div>
         <ul id="messages" class="border rounded p-4 overflow-y-auto max-h-64"></ul>
     </div>
 
@@ -36,7 +39,11 @@
     const append_message = (msg, color) => {
         let parsed_msg = JSON.parse(msg)
         const item = document.createElement('div');
-        item.innerHTML = `<div class="w-full flex flex-row gap-5"><span>${parsed_msg.message_index}</span><p class="text-wrap" style="background:${color}; min-width:100% max-width:100%">${parsed_msg.message}</p></div>`
+        item.innerHTML = `
+        <div class="w-full flex flex-row gap-5 m-2">
+            <span class="p-2">${parsed_msg.message_index}</span>
+            <p class="break-words p-2" style="background:${color}; width:90%">${parsed_msg.message}</p>
+        </div>`
         messages.appendChild(item);
         message_count++;
     }
