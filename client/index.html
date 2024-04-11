@@ -14,6 +14,8 @@
             <button onclick="chat_message()"
                 class="px-8 rounded-r-lg rounded-l-lg bg-gray-700  text-gray-200 font-bold p-4 uppercase border-gray-700 border-t border-b border-r">Send</button>
         </div>
+    </div>
+    <div>
         <ul id="messages" class="border rounded p-4 overflow-y-auto max-h-64"></ul>
     </div>
 
@@ -24,33 +26,51 @@
     const form = document.getElementById('form');
     const input = document.getElementById('input');
     const messages = document.getElementById('messages');
+    const name =  document.getElementById('name');
+    let name_variable;
 
     let message_count = 0;
 
     const chat_message = () => {
         console.log('chat_message: ', input.value);
+        if (name.value) {
+            name_variable = name.value;
+        } else {
+            name_variable = "Anonymous";
+        }
         if (input.value) {
-            socket.emit('chat_message', JSON.stringify({"message":input.value,"message_index":message_count}));
-            append_message(JSON.stringify({"message":input.value,"message_index":message_count}), "#ff9cb4")
+            socket.emit('chat_message', JSON.stringify({"message":input.value,"name":name_variable}));
+            append_message(JSON.stringify({"message":input.value,"message_index":message_count,"name":name_variable}), "#ff9cb4");
             input.value = '';
         }
     };
 
     const append_message = (msg, color) => {
-        let parsed_msg = JSON.parse(msg)
+        let parsed_msg = JSON.parse(msg);
         const item = document.createElement('div');
         item.innerHTML = `
         <div class="w-full flex flex-row gap-5 m-2">
             <span class="p-2">${parsed_msg.message_index}</span>
-            <p class="break-words p-2" style="background:${color}; width:90%">${parsed_msg.message}</p>
-        </div>`
-        messages.appendChild(item);
+            <p class="break-words p-2" style="background:${color}; width:90%"><b>${parsed_msg.name}:</b> ${parsed_msg.message}</p>
+        </div>`;
+        messages.insertBefore(item, messages.childNodes[0]);
         message_count++;
-    }
+    };
 
     socket.on('chat_message', (msg) => {
-        append_message(msg, "#8fffee")
+        append_message(msg, "#8fffee");
     });
+
+//
+//
+//
+//
+// Dela to nejake bludy pri posilani mhoho zprav
+// Text se posune kdyz je index mhohociferny
+// Dotelat server-side indexy
+// Ted to nefunguje
+//
+
 </script>
 </body>
 </html>
