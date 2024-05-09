@@ -9,6 +9,7 @@
 <body class="bg-gray-200">
     <div class="my-8 w-screen flex justify-center">
         <div class="w-3/4 flex">
+            <input id="room" autocomplete="off" class="w-1/4 rounded-l-lg rounded-r-lg placeholder-gray-500 p-4 border-t mr-2 border-b border-l text-gray-800 border-gray-200 bg-white" placeholder="Room"/>
             <input id="name" autocomplete="off" class="w-1/4 rounded-l-lg rounded-r-lg placeholder-gray-500 p-4 border-t mr-2 border-b border-l text-gray-800 border-gray-200 bg-white" placeholder="Name"/>
             <input id="input" autocomplete="off" class="grow w-full rounded-l-lg rounded-r-lg p-4 border-t mr-2 border-b border-l text-gray-800 border-gray-200 bg-white" />
             <button onclick="chat_message()"
@@ -16,7 +17,7 @@
         </div>
     </div>
     <div>
-        <ul id="messages" class="border rounded p-4 overflow-y-auto max-h-64"></ul>
+        <ul id="messages" class="flex flex-col items-center border rounded p-4 overflow-y-auto w-100vw" style="max-height: 80vh;"></ul>
     </div>
 
   <script src="socket.io.min.js"></script>
@@ -38,9 +39,9 @@
         } else {
             name_variable = "Anonymous";
         }
-        if (input.value) {
-            socket.emit('chat_message', JSON.stringify({"message":input.value,"name":name_variable}));
-            append_message(JSON.stringify({"message":input.value,"message_index":message_count,"name":name_variable}), "#ff9cb4");
+        if (input.value && room.value) {
+            socket.emit('chat_message', JSON.stringify({"message":input.value,"name":name_variable,"room":room}));
+            append_message(JSON.stringify({"message":input.value,"name":name_variable}), "#ff9cb4");
             input.value = '';
         }
     };
@@ -49,9 +50,9 @@
         let parsed_msg = JSON.parse(msg);
         const item = document.createElement('div');
         item.innerHTML = `
-        <div class="w-full flex flex-row gap-5 m-2">
-            <span class="p-2">${parsed_msg.message_index}</span>
-            <p class="break-words p-2" style="background:${color}; width:90%"><b>${parsed_msg.name}:</b> ${parsed_msg.message}</p>
+        <div class="flex flex-row justify-around gap-5 m-2" style="width: 90vw">
+            <span class="p-2 w-8">${message_count}</span>
+            <p class="break-words p-2" style="background:${color}; width:100%"><b>${parsed_msg.name}:</b> ${parsed_msg.message}</p>
         </div>`;
         messages.insertBefore(item, messages.childNodes[0]);
         message_count++;
@@ -65,11 +66,12 @@
 //
 //
 //
-// Dela to nejake bludy pri posilani mhoho zprav
-// Text se posune kdyz je index mhohociferny
-// Dotelat server-side indexy
+// Dela to nejake bludy pri posilani mhoho zprav hotovo
+// Text se posune kdyz je index mhohociferny hotovo
+// Dotelat server-side indexy nedelat seru na to
 // Ted to nefunguje
 //
+// rooms dodelat na server is client side
 
 </script>
 </body>
